@@ -1,0 +1,44 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+MSG_FILE="$1"   # 커밋 메시지 파일 경로
+SOURCE="$2"     # message | template | merge | squash | commit 등
+SHA="$3"        # (옵션) amending source SHA
+
+# merge/squash 메시지는 보통 자동 생성/특수 포맷 → 건드리지 않음
+if [ "$SOURCE" = "merge" ] || [ "$SOURCE" = "squash" ]; then
+  exit 0
+fi
+
+# 현재 브랜치에서 '#숫자' 추출
+BRANCH_NAME="$(git branch --show-current 2>/dev/null || true)"
+ISSUE_NUMBER="$(printf '%s' "$BRANCH_NAME" | grep -oE '#[0-9]+' || true)"
+
+# 메시지 읽기
+TITLE="$(head -n 1 "$MSG_FILE" || true)"
+BODY="$(tail -n +2 "$MSG_FILE" || true)"
+
+# 이미 이슈 번호가 있으면 패스
+if printf '%s\n%s' "$TITLE" "$BODY" | grep -qE '#[0-9]+'; then
+  echo "커밋 메시지에 이미 이슈 번호가 있습니다."
+else
+  if [ -n "$ISSUE_NUMBER" ]; then
+    FORMATTED_ISSUE="$(printf '%s' "$ISSUE_NUMBER" | sed 's/^#/(#/; s/$/)/')"
+    TITLE="${TITLE} ${FORMATTED_ISSUE}"
+    echo "커밋 메시지에 이슈 번호 ${FORMATTED_ISSUE} 를 추가했습니다."
+  else
+    # (no-issue) 중복 방지
+    if ! printf '%s\n' "$TITLE" | grep -q '(no-issue)'; then
+      TITLE="${TITLE} (no-issue)"
+      echo "이슈 번호를 찾을 수 없어 커밋 메시지에 (no-issue) 를 추가했습니다."
+    fi
+  fi
+fi
+
+# 파일에 다시 쓰기
+{
+  printf '%s\n' "$TITLE"
+  if [ -n "$BODY" ]; then
+    printf '%s\n' "$BODY"
+  fi
+} > "$MSG_FILE"
