@@ -1,44 +1,46 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+MSG_FILE="$1"
+SOURCE="$2"
 
-MSG_FILE="$1"   # 커밋 메시지 파일 경로
-SOURCE="$2"     # message | template | merge | squash | commit 등
-SHA="$3"        # (옵션) amending source SHA
+# 디버그 로그
+echo "[prepare-commit-msg] source=$SOURCE" >&2
 
-# merge/squash 메시지는 보통 자동 생성/특수 포맷 → 건드리지 않음
-if [ "$SOURCE" = "merge" ] || [ "$SOURCE" = "squash" ]; then
+# merge/squash 자동 메시지는 손대지 않음
+[ "$SOURCE" = "merge" ] || [ "$SOURCE" = "squash" ] && { 
+  echo "[prepare-commit-msg] skip $SOURCE" >&2
   exit 0
-fi
+}
 
-# 현재 브랜치에서 '#숫자' 추출
+# 브랜치명에서 #숫자 추출
 BRANCH_NAME="$(git branch --show-current 2>/dev/null || true)"
 ISSUE_NUMBER="$(printf '%s' "$BRANCH_NAME" | grep -oE '#[0-9]+' || true)"
 
-# 메시지 읽기
+echo "[prepare-commit-msg] branch=$BRANCH_NAME" >&2
+echo "[prepare-commit-msg] issue_from_branch=$ISSUE_NUMBER" >&2
+
+# 커밋 메시지 읽기
 TITLE="$(head -n 1 "$MSG_FILE" || true)"
 BODY="$(tail -n +2 "$MSG_FILE" || true)"
 
-# 이미 이슈 번호가 있으면 패스
+echo "[prepare-commit-msg] title(before)=$TITLE" >&2
+
+# 이미 메시지 안에 #숫자가 있으면 추가 안 함
 if printf '%s\n%s' "$TITLE" "$BODY" | grep -qE '#[0-9]+'; then
-  echo "커밋 메시지에 이미 이슈 번호가 있습니다."
+  echo "[prepare-commit-msg] already has issue -> skip append" >&2
 else
   if [ -n "$ISSUE_NUMBER" ]; then
-    FORMATTED_ISSUE="$(printf '%s' "$ISSUE_NUMBER" | sed 's/^#/(#/; s/$/)/')"
-    TITLE="${TITLE} ${FORMATTED_ISSUE}"
-    echo "커밋 메시지에 이슈 번호 ${FORMATTED_ISSUE} 를 추가했습니다."
-  else
-    # (no-issue) 중복 방지
-    if ! printf '%s\n' "$TITLE" | grep -q '(no-issue)'; then
-      TITLE="${TITLE} (no-issue)"
-      echo "이슈 번호를 찾을 수 없어 커밋 메시지에 (no-issue) 를 추가했습니다."
-    fi
+    TAG="$(printf '%s' "$ISSUE_NUMBER" | sed 's/^#/(#/; s/$/)/')"
+    TITLE="${TITLE} ${TAG}"
+    echo "[prepare-commit-msg] appended=$TAG" >&2
+  elif ! printf '%s\n' "$TITLE" | grep -q '(no-issue)'; then
+    TITLE="${TITLE} (no-issue)"
+    echo "[prepare-commit-msg] appended=(no-issue)" >&2
   fi
 fi
 
-# 파일에 다시 쓰기
+# 파일 다시 쓰기(덮어쓰기)
 {
   printf '%s\n' "$TITLE"
-  if [ -n "$BODY" ]; then
-    printf '%s\n' "$BODY"
-  fi
+  [ -n "$BODY" ] && printf '%s\n' "$BODY"
 } > "$MSG_FILE"
+
+echo "[prepare-commit-msg] title(after)=$(head -n 1 "$MSG_FILE")" >&2
