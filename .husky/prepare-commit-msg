@@ -1,0 +1,46 @@
+MSG_FILE="$1"
+SOURCE="$2"
+
+# 디버그 로그
+echo "[prepare-commit-msg] source=$SOURCE" >&2
+
+# merge/squash 자동 메시지는 손대지 않음
+[ "$SOURCE" = "merge" ] || [ "$SOURCE" = "squash" ] && { 
+  echo "[prepare-commit-msg] skip $SOURCE" >&2
+  exit 0
+}
+
+# 브랜치명에서 #숫자 추출
+BRANCH_NAME="$(git branch --show-current 2>/dev/null || true)"
+ISSUE_NUMBER="$(printf '%s' "$BRANCH_NAME" | grep -oE '#[0-9]+' || true)"
+
+echo "[prepare-commit-msg] branch=$BRANCH_NAME" >&2
+echo "[prepare-commit-msg] issue_from_branch=$ISSUE_NUMBER" >&2
+
+# 커밋 메시지 읽기
+TITLE="$(head -n 1 "$MSG_FILE" || true)"
+BODY="$(tail -n +2 "$MSG_FILE" || true)"
+
+echo "[prepare-commit-msg] title(before)=$TITLE" >&2
+
+# 이미 메시지 안에 #숫자가 있으면 추가 안 함
+if printf '%s\n%s' "$TITLE" "$BODY" | grep -qE '#[0-9]+'; then
+  echo "[prepare-commit-msg] already has issue -> skip append" >&2
+else
+  if [ -n "$ISSUE_NUMBER" ]; then
+    TAG="$(printf '%s' "$ISSUE_NUMBER" | sed 's/^#/(#/; s/$/)/')"
+    TITLE="${TITLE} ${TAG}"
+    echo "[prepare-commit-msg] appended=$TAG" >&2
+  elif ! printf '%s\n' "$TITLE" | grep -q '(no-issue)'; then
+    TITLE="${TITLE} (no-issue)"
+    echo "[prepare-commit-msg] appended=(no-issue)" >&2
+  fi
+fi
+
+# 파일 다시 쓰기(덮어쓰기)
+{
+  printf '%s\n' "$TITLE"
+  [ -n "$BODY" ] && printf '%s\n' "$BODY"
+} > "$MSG_FILE"
+
+echo "[prepare-commit-msg] title(after)=$(head -n 1 "$MSG_FILE")" >&2

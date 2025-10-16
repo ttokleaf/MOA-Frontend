@@ -1,0 +1,9 @@
+code_review:
+  comment_severity_threshold: "MEDIUM"
+  disable: false
+ignore_patterns:
+  - "*.test.js"
+  - "dist/**"
+  - "node_modules/**"
+  - "*.config.js"
+have_fun: true
