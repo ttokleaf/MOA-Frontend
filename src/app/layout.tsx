@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="ko" className={pretendard.variable}>
       <body className="antialiased">
         <div className="drop-shadow-brand bg-bg flex h-dvh justify-center md:drop-shadow-none">
-          <div className="w-full max-w-[440px]">{children}</div>
+          <div className="w-full max-w-[var(--layout-width)]">{children}</div>
         </div>
       </body>
     </html>
