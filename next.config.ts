@@ -8,25 +8,14 @@ const nextConfig: NextConfig = {
         typeof rule.test === 'object' && rule.test instanceof RegExp && rule.test?.test?.('.svg')
     );
 
-    if (!fileLoaderRule) {
-      throw new Error('File loader rule not found');
-    }
-
-    config.module.rules.push(
-      {
-        ...fileLoaderRule,
+    if (fileLoaderRule) {
+      config.module.rules.push({
         test: /\.svg$/i,
-        resourceQuery: /url/,
-      },
-      {
-        test: /\.svg$/i,
-        issuer: fileLoaderRule.issuer,
-        resourceQuery: { not: [...fileLoaderRule.resourceQuery.not, /url/] },
         use: ['@svgr/webpack'],
-      }
-    );
+      });
 
-    fileLoaderRule.exclude = /\.svg$/i;
+      fileLoaderRule.exclude = /\.svg$/i;
+    }
 
     return config;
   },
