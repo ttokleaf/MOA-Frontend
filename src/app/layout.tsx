@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import '@/app/styles/globals.css';
+import '@styles/globals.css';
 
 const pretendard = localFont({
-  src: [{ path: '../assets/fonts/PretendardVariable.woff2', style: 'normal', weight: '100 900' }],
+  src: [{ path: '@/assets/fonts/PretendardVariable.woff2', style: 'normal', weight: '100 900' }],
   variable: '--font-family-sans',
   display: 'swap',
   fallback: ['system-ui', 'Arial', 'sans-serif'],
