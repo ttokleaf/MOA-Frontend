@@ -35,16 +35,18 @@
   --color-green-dark-active: #004c41;
   --color-green-darker: #003b33;
 
-  --color-grey-light: #f3f3f3;
-  --color-grey-light-hover: #ededed;
-  --color-grey-light-active: #d9d9d9;
+  --color-grey-light: #c8c8c8;
+  --color-grey-light-hover: #bdbdbd;
+  --color-grey-light-active: #afafaf;
   --color-grey-normal: #848484;
-  --color-grey-normal-hover: #777777;
-  --color-grey-normal-active: #6a6a6a;
-  --color-grey-dark: #636363;
-  --color-grey-dark-hover: #4f4f4f;
-  --color-grey-dark-active: #3b3b3b;
-  --color-grey-darker: #2e2e2e;
+  --color-grey-normal-hover: #707070;
+  --color-grey-normal-active: #606060;
+  --color-grey-dark: #2e2e2e;
+  --color-grey-dark-hover: #212121;
+  --color-grey-dark-active: #0f0f0f;
+
+  --color-grey-lighter: #fdfdfd;
+  --color-grey-lighter-hover: #f2f2f2;
 
   --color-red: #ed4242;
 
