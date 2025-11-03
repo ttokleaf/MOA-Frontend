@@ -1,18 +1,18 @@
 @import 'tailwindcss';
 
-:root {
+@theme {
   --background: #ffffff;
   --foreground: #000000;
 
   --font-family-sans: 'Pretendard', sans-serif;
   --font-family-mono: 'Menlo', monospace;
 
-  --font-size-xs: 8px;
-  --font-size-sm: 10px;
-  --font-size-base: 12px;
-  --font-size-lg: 14px;
-  --font-size-xl: 16px;
-  --font-size-xxl: 24px;
+  --text-size-xs: 0.5rem; /* 8px */
+  --text-size-sm: 0.625rem; /* 10px */
+  --text-size-base: 0.75rem; /* 12px */
+  --text-size-lg: 0.875rem; /* 14px */
+  --text-size-xl: 1rem; /* 16px */
+  --text-size-xxl: 1.5rem; /* 24px */
 
   --font-weight-regular: 400;
   --font-weight-medium: 500;
@@ -35,16 +35,18 @@
   --color-green-dark-active: #004c41;
   --color-green-darker: #003b33;
 
-  --color-grey-light: #f3f3f3;
-  --color-grey-light-hover: #ededed;
-  --color-grey-light-active: #d9d9d9;
+  --color-grey-light: #c8c8c8;
+  --color-grey-light-hover: #bdbdbd;
+  --color-grey-light-active: #afafaf;
   --color-grey-normal: #848484;
-  --color-grey-normal-hover: #777777;
-  --color-grey-normal-active: #6a6a6a;
-  --color-grey-dark: #636363;
-  --color-grey-dark-hover: #4f4f4f;
-  --color-grey-dark-active: #3b3b3b;
-  --color-grey-darker: #2e2e2e;
+  --color-grey-normal-hover: #707070;
+  --color-grey-normal-active: #606060;
+  --color-grey-dark: #2e2e2e;
+  --color-grey-dark-hover: #212121;
+  --color-grey-dark-active: #0f0f0f;
+
+  --color-grey-lighter: #fdfdfd;
+  --color-grey-lighter-hover: #f2f2f2;
 
   --color-red: #ed4242;
 
@@ -52,11 +54,36 @@
 
   --layout-width: 440px;
 
-  --radius-sm: 4px;
-  --radius-md: 8px;
+  --rounded-sm: 4px;
+  --rounded-md: 8px;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+}
+
+/* Custom text size utilities */
+.text-xs-custom {
+  font-size: var(--text-size-xs);
+}
+
+.text-sm-custom {
+  font-size: var(--text-size-sm);
+}
+
+.text-base-custom {
+  font-size: var(--text-size-base);
+}
+
+.text-lg-custom {
+  font-size: var(--text-size-lg);
+}
+
+.text-xl-custom {
+  font-size: var(--text-size-xl);
+}
+
+.text-xxl-custom {
+  font-size: var(--text-size-xxl);
 }
 
 body {

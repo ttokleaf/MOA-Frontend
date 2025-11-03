@@ -7,5 +7,6 @@
   "files.eol": "\n",
   "files.insertFinalNewline": true,
   "typescript.preferences.importModuleSpecifier": "non-relative",
-  "javascript.updateImportsOnFileMove.enabled": "always"
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "css.lint.unknownAtRules": "ignore"
 }
