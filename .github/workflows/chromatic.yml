@@ -17,6 +17,9 @@ jobs:
     if: ${{ !contains(github.event.pull_request.labels.*.name, 'skip-build') }}
     name: Run Chromatic Deployment
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     outputs:
       status: ${{ job.status }}
 
