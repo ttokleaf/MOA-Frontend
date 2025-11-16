@@ -23,3 +23,6 @@ export { default as DateIcon } from '@/assets/icons/ic_date.svg';
 // Settings Icons
 export { default as SettingsIcon } from '@/assets/icons/ic_settings.svg';
 export { default as SettingsArrowIcon } from '@/assets/icons/ic_settings_arrow.svg';
+
+// Logo Icons
+export { default as SymbolLogoIcon } from '@/assets/icons/symbol_logo.svg';
