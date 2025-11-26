@@ -34,7 +34,7 @@ function HeaderSettingsButton({ onClick }: { onClick?: () => void }) {
 
 export default function Header({ showSettings = true, onSettingsClick }: HeaderProps) {
   return (
-    <header className="fixed top-0 right-0 left-0 z-50" role="header">
+    <header className="fixed top-0 right-0 left-0 z-50">
       <div className="mx-auto flex max-w-[var(--layout-width)] items-center justify-between px-5 py-4">
         <HeaderLogo />
         {showSettings && <HeaderSettingsButton onClick={onSettingsClick} />}
